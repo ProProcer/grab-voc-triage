@@ -13,4 +13,4 @@ result, _ = reviews(
 )
 
 df = pd.DataFrame(result)[['userName', 'score', 'at', 'content']]
-df.to_csv('data/raw/grab_raw_reviews.csv', index=False)  
+df.to_csv('data/raw/grab_reviews.csv', index=False)  
