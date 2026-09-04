@@ -1,10 +1,9 @@
 from google_play_scraper import Sort, reviews
 import pandas as pd
-
-app_id = 'com.grabtaxi.passenger'
+import config
 
 result, _ = reviews(
-    app_id,
+    config.APP_ID,
     lang='id',              # 'id' for Indonesian, 'ms' for Malay
     country='id',           # 'id' or 'my'
     sort=Sort.NEWEST,
@@ -13,4 +12,4 @@ result, _ = reviews(
 )
 
 df = pd.DataFrame(result)[['userName', 'score', 'at', 'content']]
-df.to_csv('data/raw/grab_reviews.csv', index=False)  
+df.to_csv(config.RAW_DATA_PATH, index=False)  
