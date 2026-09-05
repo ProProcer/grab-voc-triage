@@ -5,7 +5,7 @@ import config
 df = pd.read_csv(config.RAW_DATA_PATH)
 df = (
     df
-    .pipe(score_filter)
+    .pipe(length_filter)
     .pipe(normalize_review)
     .pipe(drop_duplicate_review)
 )
