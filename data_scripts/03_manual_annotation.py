@@ -2,6 +2,7 @@ import config
 import pandas as pd
 from pathlib import Path
 import argparse
+from src.preprocessing.utils import df_to_few_shot_markdown
 
 def parse_args():
     parser = argparse.ArgumentParser()
@@ -29,11 +30,7 @@ def main():
     if not Path(config.FEW_SHOT_EXAMPLE_DATA_PATH).exists() or args.force_conversion:
         df_annotated_few_shot = pd.read_excel(config.FEW_SHOT_EXAMPLE_EXCEL_DATA_PATH, index_col = 0)
         df_annotated_few_shot.index.name = None
-        df_annotated_few_shot[['content'] + config.CATEGORIES].to_json(
-            config.FEW_SHOT_EXAMPLE_DATA_PATH,
-            orient='records',
-            indent=2,
-            force_ascii=False
-        )
+        df_to_few_shot_markdown(df_annotated_few_shot, 'content', config.CATEGORIES, config.FEW_SHOT_EXAMPLE_DATA_PATH)
+
 if __name__ == '__main__':
     main()
