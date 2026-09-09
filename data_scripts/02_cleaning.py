@@ -1,5 +1,5 @@
 import pandas as pd
-from src.preprocessing.transform import score_filter, length_filter, normalize_review, drop_duplicate_review
+from src.data.transform import score_filter, length_filter, normalize_review, drop_duplicate_review
 import config
 
 df = pd.read_csv(config.RAW_DATA_PATH)

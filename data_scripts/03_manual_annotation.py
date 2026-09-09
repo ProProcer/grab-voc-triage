@@ -2,7 +2,7 @@ import config
 import pandas as pd
 from pathlib import Path
 import argparse
-from src.preprocessing.utils import df_to_few_shot_markdown
+from src.data.utils import df_to_few_shot_markdown
 
 def parse_args():
     parser = argparse.ArgumentParser()
