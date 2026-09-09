@@ -1,6 +1,7 @@
 from src.models.base import ReviewClassificationModel
 from src.schemas.prediction import ReviewClassification
 from openai import OpenAI
+import config
 
 class OpenAIModel(ReviewClassificationModel):
     def __init__(self, system_prompt : str, model : str):
@@ -22,8 +23,5 @@ class OpenAIModel(ReviewClassificationModel):
         except Exception as e:
             print(f"Inference error on review: {e}")
             return {
-                "DRIVER_OPERATIONS": "ERROR",
-                "APP_AND_MAPS": "ERROR",
-                "PRICING_AND_BILLING": "ERROR",
-                "FULFILLMENT_FOOD": "ERROR"
+                c : "ERROR" for c in config.CATEGORIES
             }
