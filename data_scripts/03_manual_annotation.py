@@ -7,7 +7,7 @@ from src.data.utils import df_to_few_shot_markdown
 def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument('-t', '--force_template', action = 'store_true')
-    parser.add_argument('-e', '--force_conversion', action = 'store_true')
+    parser.add_argument('-c', '--force_conversion', action = 'store_true')
     return parser.parse_args()
 
 def main():
