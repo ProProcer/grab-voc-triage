@@ -7,7 +7,7 @@ class OpenAIModel(ReviewClassificationModel):
         self.system_prompt = system_prompt
         self.model = model
         self.client = OpenAI()
-    def classify(self, text):
+    def classify(self, text) -> dict:
         try:
             response = self.client.beta.chat.completions.parse(
                 model=self.model,
