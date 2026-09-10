@@ -14,6 +14,8 @@ FEW_SHOT_EXAMPLE_TEMPLATE_DATA_PATH = 'data/interim/few_shot_example.xlsx'
 FEW_SHOT_EXAMPLE_DATA_PATH = 'data/processed/few_shot_example.md'
 FEW_SHOT_EXAMPLE_EXCEL_DATA_PATH = 'data/processed/few_shot_example.xlsx'
 
+OPENAI_BATCH_CLASSIFY_TEMP_JSONL = 'data/interim/batch_tasks.jsonl'
+
 MODEL_PREDS_DIR = "data/preds"
 
 CATEGORIES = ['DRIVER_OPS', 'APP_AND_MAPS', 'PRICING_AND_BILLING']
