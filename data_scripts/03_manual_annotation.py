@@ -22,6 +22,9 @@ def main():
         selected_few_shot = df.groupby('score').sample(frac = config.FEW_SHOT_COUNT / len(df), random_state = config.RANDOM_STATE)
         selected_few_shot.to_excel(config.FEW_SHOT_EXAMPLE_TEMPLATE_DATA_PATH)
 
+        df = df.drop(selected_few_shot.index)
+        df.to_csv(config.EXCLUDE_MANUAL_DATA_PATH)
+
     if not Path(config.MANUAL_ANNOTATION_DATA_PATH).exists() or args.force_conversion:
         df_annotated = pd.read_excel(config.MANUAL_ANNOTATION_EXCEL_DATA_PATH, index_col = 0)
         df_annotated.index.name = None

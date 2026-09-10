@@ -2,6 +2,7 @@ APP_ID = 'com.grabtaxi.passenger'
 
 RAW_DATA_PATH = 'data/raw/grab_reviews.csv'
 CLEANED_DATA_PATH = 'data/interim/grab_reviews.csv'
+EXCLUDE_MANUAL_DATA_PATH = 'data/processed/grab_reviews.csv'
 
 MANUAL_ANNOTATION_COUNT = 50.2
 MANUAL_ANNOTATION_TEMPLATE_DATA_PATH = 'data/interim/manual_annotation.xlsx'
