@@ -23,6 +23,7 @@ def main():
         selected_few_shot.to_excel(config.FEW_SHOT_EXAMPLE_TEMPLATE_DATA_PATH)
 
         df = df.drop(selected_few_shot.index)
+        df = df.drop(config.CATEGORIES, axis = 1)
         df.to_csv(config.EXCLUDE_MANUAL_DATA_PATH)
 
     if not Path(config.MANUAL_ANNOTATION_DATA_PATH).exists() or args.force_conversion:
