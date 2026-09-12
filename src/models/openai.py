@@ -1,10 +1,11 @@
-from src.models.base import ReviewClassificationModel
 from src.schemas.prediction import ReviewClassification
 from openai import OpenAI, RateLimitError
 import config
+import tqdm
 from tenacity import retry, wait_exponential, stop_after_attempt, retry_if_exception_type
+from typing import List
 
-class OpenAIModel(ReviewClassificationModel):
+class OpenAIModel():
     def __init__(self, system_prompt : str, model : str):
         self.system_prompt = system_prompt
         self.model = model
@@ -33,3 +34,14 @@ class OpenAIModel(ReviewClassificationModel):
             return {
                 c : "ERROR" for c in config.CATEGORIES
             }
+    def batch_classify(self, texts : List[str]) -> List[dict]:
+        result = []
+        for t in tqdm(texts, desc="Labeling"):
+            result.append(self.classify(t))
+        return result
+
+    def __call__(self, texts):
+        if isinstance(texts, str):
+            return self.classify(texts)
+        return self.batch_classify(texts)
+         
