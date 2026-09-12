@@ -18,6 +18,7 @@ OPENAI_BATCH_CLASSIFY_TEMP_JSONL = 'data/interim/batch_tasks.jsonl'
 MODEL_PREDS_DIR = "data/preds"
 
 VALID_SIZE = 0.2
+PSEUDO_GT_DATA = "data/preds/openai/grab_reviews__ver2__gpt-4o-mini.csv"
 TRAIN_PATH = 'data/processed/train.parquet'
 VALID_PATH = 'data/processed/valid.parquet'
 TEST_PATH = 'data/processed/test.parquet'
