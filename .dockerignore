@@ -13,7 +13,8 @@ outputs/
 wandb/
 .pytest_cache/
 .ipynb_checkpoints/
-data/raw/
-data/interim/
-data/preds/
-models/
+/data/raw/
+/data/interim/
+/data/preds/
+/models/
+!src/models/

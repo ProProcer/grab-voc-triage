@@ -1,9 +1,13 @@
 from transformers import AutoModel
 from torch import nn
-import config
+try:
+    import config
+    DEFAULT_NUM_LABELS = len(config.CATEGORIES)
+except (ImportError, AttributeError):
+    DEFAULT_NUM_LABELS = 3
 
 class ReviewClassifier(nn.Module):
-    def __init__(self, pretrained_model : str, num_labels : int = len(config.CATEGORIES), dropout_prob = 0.3):
+    def __init__(self, pretrained_model : str, num_labels : int = DEFAULT_NUM_LABELS, dropout_prob = 0.3):
         super().__init__()
         self.encoder = AutoModel.from_pretrained(pretrained_model)
         hidden_size = self.encoder.config.hidden_size

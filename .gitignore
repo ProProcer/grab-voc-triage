@@ -226,3 +226,4 @@ models/*
 checkpoints/
 wandb/
 outputs/
+job_spec.yaml

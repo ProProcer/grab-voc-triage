@@ -3,7 +3,8 @@ FROM pytorch/pytorch:2.6.0-cuda12.4-cudnn9-runtime
 
 # Set environment variables
 ENV PYTHONUNBUFFERED=1 \
-    DEBIAN_FRONTEND=noninteractive
+    DEBIAN_FRONTEND=noninteractive \
+    PYTHONPATH=/app
 
 WORKDIR /app
 
