@@ -218,11 +218,11 @@ __marimo__/
 .streamlit/secrets.toml
 
 .vscode/
-data/raw/
-data/interim/
-data/preds/
+/data/raw/
+/data/interim/
+/data/preds/
 
-models/*
+/pretrained_weights/
 checkpoints/
 wandb/
 outputs/

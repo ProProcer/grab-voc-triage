@@ -1,13 +1,10 @@
+.gcloudignore
+.git
+.gitignore
+.env
 __pycache__/
 *.py[cod]
 *$py.class
-.Python
-env/
-venv/
-.venv/
-.env
-.git/
-.gitignore
 checkpoints/
 outputs/
 wandb/
@@ -17,3 +14,4 @@ wandb/
 /data/interim/
 /data/preds/
 /pretrained_weights/
+job_spec.yaml
