@@ -1,5 +1,5 @@
-# Official lightweight PyTorch image with CUDA 12.1 and cuDNN runtime
-FROM pytorch/pytorch:2.1.2-cuda12.1-cudnn8-runtime
+# Official lightweight PyTorch image with CUDA 12.4 and cuDNN 9 runtime
+FROM pytorch/pytorch:2.5.1-cuda12.4-cudnn9-runtime
 
 # Set environment variables
 ENV PYTHONUNBUFFERED=1 \
