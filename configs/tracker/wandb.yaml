@@ -1,0 +1,7 @@
+_target_: src.training.tracker.WandbTracker
+project: "${project_name}"
+name: "${run_name}"
+entity: null
+tags: ["indobert", "grab-voc"]
+notes: "Fine-tuning IndoBERT on Grab VOC dataset"
+mode: "online"

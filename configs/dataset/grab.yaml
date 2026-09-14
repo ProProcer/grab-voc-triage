@@ -1,0 +1,26 @@
+train_path: "data/processed/train.parquet"
+valid_path: "data/processed/valid.parquet"
+test_path: "data/processed/test.parquet"
+text_col: "content"
+category_cols: ["DRIVER_OPS", "APP_AND_MAPS", "PRICING_AND_BILLING"]
+pretrained_model: "${model.pretrained_model}"
+max_tokens_len: 128
+
+.base_dataset: &base_dataset
+  _target_: src.data.dataset.ReviewDataset
+  text_col: "${..text_col}"
+  category_cols: "${..category_cols}"
+  pretrained_model: "${..pretrained_model}"
+  max_tokens_len: ${..max_tokens_len}
+
+train_dataset:
+  <<: *base_dataset
+  parquet_path: "${..train_path}"
+
+valid_dataset:
+  <<: *base_dataset
+  parquet_path: "${..valid_path}"
+
+test_dataset:
+  <<: *base_dataset
+  parquet_path: "${..test_path}"

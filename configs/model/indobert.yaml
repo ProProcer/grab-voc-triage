@@ -1,0 +1,4 @@
+_target_: src.models.hf_pretrained.ReviewClassifier
+pretrained_model: "models/indobert-base-p1"
+num_labels: ${len:${dataset.category_cols}}
+dropout_prob: 0.3

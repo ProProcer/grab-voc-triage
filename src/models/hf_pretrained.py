@@ -13,12 +13,8 @@ class ReviewClassifier(nn.Module):
     def forward(self, input_ids, attention_mask):
         outputs = self.encoder(input_ids = input_ids, attention_mask = attention_mask)
 
-        cls_output = (
-            outputs.pooler_output 
-            if hasattr(outputs, 'pooler_outputs') and 
-            outputs.pooler_output 
-            else outputs.last_hidden_state[:, 0, :]
-        )
+        pooler = getattr(outputs, "pooler_output", None)
+        cls_output = pooler if pooler is not None else outputs.last_hidden_state[:, 0, :]
 
         retained = self.dropout(cls_output)
         logits = self.classifier(retained)

@@ -1,0 +1,18 @@
+defaults:
+  - dataset: grab
+  - model: indobert
+  - _self_
+
+project_name: "grab-voc-triage"
+run_name: "indobert-base-run1"
+
+# Checkpoint to evaluate
+checkpoint_path: "checkpoints/${run_name}/best_model.pt"
+
+# Evaluation settings
+split: "test"  # "test" or "valid"
+batch_size: 32
+threshold: 0.5
+device: "cuda"
+num_workers: 2
+output_predictions_path: "data/preds/indobert_${split}_preds.csv"
