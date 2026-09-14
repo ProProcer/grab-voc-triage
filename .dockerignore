@@ -16,3 +16,4 @@ wandb/
 data/raw/
 data/interim/
 data/preds/
+models/
