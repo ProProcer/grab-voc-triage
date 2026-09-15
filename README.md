@@ -1,7 +1,7 @@
 # Grab Voice-of-Customer (VOC) Review Triage Pipeline
 
 An end-to-end Machine Learning and MLOps system to automatically categorize and triage customer feedback for Grab Superapp into actionable operational domains using fine-tuned **IndoBERT**.
-
+![FastAPI Swagger UI Demo](assets/fastapi_demo.png)
 ---
 
 ## 🎯 Problem Statement & Taxonomy
@@ -29,6 +29,9 @@ Evaluated on the held-out test dataset using the best fine-tuned checkpoint:
 | `DRIVER_OPS` Macro F1 | **89.37%** |
 | `APP_AND_MAPS` Macro F1 | **89.01%** |
 | `PRICING_AND_BILLING` Macro F1 | **88.34%** |
+
+### Training Progression & Experiment Tracking (Weights & Biases)
+![Weights & Biases Metrics Dashboard](assets/wandb_dashboard.png)
 
 ---
 
