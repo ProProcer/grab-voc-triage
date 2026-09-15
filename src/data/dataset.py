@@ -7,15 +7,16 @@ from typing import List
 class ReviewDataset(Dataset):
     def __init__(self, parquet_path : str, text_col : str, category_cols : List[str], pretrained_model : str, max_tokens_len : int):
         df = pd.read_parquet(parquet_path)
-        self.texts = df[text_col].astype('str').to_list()
+        self.texts = [str(t) if (pd.notna(t) and t is not None) else "" for t in df[text_col]]
         self.labels = df[category_cols].values.astype('float32')
         self.tokenizer = AutoTokenizer.from_pretrained(pretrained_model)
         self.max_tokens_len = max_tokens_len
     def __len__(self):
         return len(self.texts)
     def __getitem__(self, idx):
+        text = str(self.texts[idx]) if self.texts[idx] is not None else ""
         encoding = self.tokenizer(
-            text = self.texts[idx],
+            text = text,
             padding = 'max_length',
             truncation = True,
             max_length = self.max_tokens_len,
