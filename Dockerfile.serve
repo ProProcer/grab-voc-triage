@@ -1,0 +1,37 @@
+# Production Serving Image for Grab Voice-of-Customer (VOC) Triage API
+# Uses python:3.11-slim with CPU PyTorch for lightweight and cost-effective serving
+FROM python:3.11-slim
+
+ENV PYTHONUNBUFFERED=1 \
+    DEBIAN_FRONTEND=noninteractive \
+    PYTHONPATH=/app \
+    PORT=8000
+
+WORKDIR /app
+
+# Install minimal system tools
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install PyTorch (CPU) and Python dependencies
+COPY requirements.txt .
+RUN pip install --no-cache-dir torch --index-url https://download.pytorch.org/whl/cpu && \
+    pip install --no-cache-dir -r requirements.txt
+
+# Pre-cache HuggingFace IndoBERT base tokenizer and architecture
+RUN python -c "from transformers import AutoTokenizer, AutoModel; \
+    AutoTokenizer.from_pretrained('indobenchmark/indobert-base-p1'); \
+    AutoModel.from_pretrained('indobenchmark/indobert-base-p1')"
+
+# Copy application source code
+COPY src/ /app/src/
+COPY app.py /app/app.py
+
+# Copy model checkpoint (can also be mounted or pulled from GCS via env var)
+COPY checkpoints/indobert-base-run1/best_model.pt /app/checkpoints/indobert-base-run1/best_model.pt
+
+EXPOSE 8000
+
+# Run FastAPI app with Uvicorn
+CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8000"]
