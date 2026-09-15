@@ -88,7 +88,7 @@ def main(cfg: DictConfig):
     )
 
     # Tracker (WandB or Console)
-    tracker = instantiate(cfg.tracker, config=cfg)
+    tracker = instantiate(cfg.tracker, _recursive_=False, run_config=cfg)
 
     # Trainer
     trainer = Trainer(

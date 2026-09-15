@@ -23,11 +23,12 @@ class WandbTracker:
         entity: Optional[str] = None,
         tags: Optional[List[str]] = None,
         notes: Optional[str] = None,
-        config: Optional[Union[Dict[str, Any], DictConfig]] = None,
+        run_config: Optional[Union[Dict[str, Any], DictConfig]] = None,
         mode: Optional[str] = None,
         dir: Optional[Union[str, Path]] = None,
         **kwargs: Any,
     ):
+        config = run_config if run_config is not None else kwargs.pop("config", None)
         # Convert OmegaConf DictConfig to native Python dict if passed from Hydra
         if isinstance(config, DictConfig):
             config = OmegaConf.to_container(config, resolve=True)
@@ -101,7 +102,7 @@ class ConsoleTracker:
     Lightweight console-based tracker implementing ExperimentTracker for local or testing runs.
     """
 
-    def __init__(self, experiment_name: str = "default_run"):
+    def __init__(self, experiment_name: str = "default_run", **kwargs: Any):
         self.experiment_name = experiment_name
 
     def log_metrics(self, metrics: Dict[str, float], step: Optional[int] = None) -> None:
