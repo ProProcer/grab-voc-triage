@@ -26,3 +26,4 @@ pin_memory: true
 primary_metric: "val_macro_f1_mean"
 greater_is_better: true
 checkpoint_dir: "checkpoints"
+gcs_output_dir: "gs://grab-voc-triage-models/checkpoints/${run_name}"

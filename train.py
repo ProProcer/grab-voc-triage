@@ -104,6 +104,7 @@ def main(cfg: DictConfig):
         greater_is_better=cfg.greater_is_better,
         tracker=tracker,
         checkpoint_dir=cfg.checkpoint_dir,
+        gcs_output_dir=cfg.get("gcs_output_dir"),
     )
 
     print(f"Starting training for {cfg.epochs} epochs ({total_steps} steps)...")

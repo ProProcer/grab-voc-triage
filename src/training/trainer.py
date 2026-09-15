@@ -1,3 +1,4 @@
+import os
 import shutil
 from pathlib import Path
 from typing import Callable, Dict, Optional, Union
@@ -24,6 +25,7 @@ class Trainer:
         greater_is_better: bool,
         tracker: ExperimentTracker,
         checkpoint_dir: Union[Path, str] = Path("checkpoints"),
+        gcs_output_dir: Optional[str] = None,
     ):
         self.device = device
         self.model = model.to(self.device)
@@ -38,6 +40,7 @@ class Trainer:
         self.best_performance = -float("inf") if greater_is_better else float("inf")
         self.tracker = tracker
         self.checkpoint_dir = Path(checkpoint_dir)
+        self.gcs_output_dir = gcs_output_dir
         self.current_epoch: Optional[int] = None
 
     def _is_better(self, score: float) -> bool:
@@ -128,8 +131,38 @@ class Trainer:
                 },
             )
 
+        # Upload best model to Google Cloud Storage bucket if configured
+        gcs_dest = (
+            self.gcs_output_dir
+            or os.environ.get("GCS_OUTPUT_DIR")
+            or os.environ.get("AIP_MODEL_DIR")
+        )
+        if gcs_dest and best_model_path.exists():
+            gcs_target = gcs_dest.rstrip("/") + "/best_model.pt"
+            self._upload_to_gcs(best_model_path, gcs_target)
+
         if hasattr(self.tracker, "finish"):
             self.tracker.finish()
+
+    def _upload_to_gcs(self, local_path: Path, gcs_destination: str) -> None:
+        """Uploads a local file to a Google Cloud Storage URI (gs://bucket/path)."""
+        try:
+            from google.cloud import storage
+
+            if not gcs_destination.startswith("gs://"):
+                return
+            parts = gcs_destination[5:].split("/", 1)
+            bucket_name = parts[0]
+            blob_name = parts[1] if len(parts) > 1 else local_path.name
+            client = storage.Client()
+            bucket = client.bucket(bucket_name)
+            blob = bucket.blob(blob_name)
+            size_mb = local_path.stat().st_size / (1024 * 1024)
+            print(f"Uploading {local_path.name} ({size_mb:.1f} MB) to {gcs_destination}...")
+            blob.upload_from_filename(str(local_path))
+            print(f"Successfully uploaded {local_path.name} to {gcs_destination}!")
+        except Exception as e:
+            print(f"Notice: GCS upload skipped or failed ({gcs_destination}): {e}")
 
     def save_checkpoint(
         self,
@@ -185,18 +218,23 @@ class Trainer:
         if isinstance(metric, dict):
             state["metrics"] = metric
 
-        # Always save latest checkpoint
+        # Always save latest checkpoint with full state (model + optimizer + scheduler) for resuming
         if save_latest:
             latest_path = save_dir / latest_filename
             torch.save(state, latest_path)
 
-        # Save best checkpoint if performance improved
+        # Save best checkpoint if performance improved (lightweight: model_state_dict + metrics only)
         if is_best:
             best_path = save_dir / best_filename
-            if save_latest:
-                shutil.copyfile(latest_path, best_path)
-            else:
-                torch.save(state, best_path)
+            best_state = {
+                "epoch": self.current_epoch,
+                "model_state_dict": self.model.state_dict(),
+                "best_performance": self.best_performance,
+                self.primary_metric: score,
+            }
+            if isinstance(metric, dict):
+                best_state["metrics"] = metric
+            torch.save(best_state, best_path)
 
         return is_best
 
