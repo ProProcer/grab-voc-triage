@@ -18,6 +18,41 @@ Each category is treated as an independent binary classification task (`NEG` = c
 
 ---
 
+## 🛠️ Data Engineering & Curation Pipeline
+
+To build a high-quality dataset from scratch without expensive manual labeling across the entire corpus, this project implemented a **Data-Centric AI** workflow combining real-world scraping, human ground-truth validation, and LLM-assisted weak supervision:
+
+```mermaid
+flowchart LR
+    A["Play Store Scraper\n(10k Raw Reviews)"] --> B["Data Cleaning &\nNormalization Pipeline"]
+    B --> C["Taxonomy Definition &\nManual Annotation (Golden Set)"]
+    C --> D["LLM Weak Supervision\n(OpenAI Batch API + Schema)"]
+    D --> E["Quality Inspection &\nBenchmarking Notebooks"]
+    E --> F["Stratified Multi-Label\nTrain/Val/Test Split (Parquet)"]
+```
+
+1. **Real-World VOC Collection (`data_scripts/01_scraper.py`)**:
+   - Automated ingestion of **10,000 raw customer reviews** directly from the Google Play Store for Grab Indonesia (`lang='id', country='id'`).
+   - Captured review content, star ratings, timestamps, and user interaction metadata.
+
+2. **Cleaning & Text Normalization Pipeline (`data_scripts/02_cleaning.py`)**:
+   - Implemented an extensible Pandas pipeline (`.pipe()`) chaining character normalization, whitespace cleaning, length filtering, and duplicate removal.
+   - Handled noisy colloquial Indonesian (*Bahasa Gaul*), abbreviations, and emojis typical in mobile user feedback.
+
+3. **Human Ground-Truth & Taxonomy Validation (`data_scripts/03_manual_annotation.py`)**:
+   - Manually annotated a seed sample across all three operational categories to establish an authoritative "golden test set".
+   - Refined and validated the 3-domain taxonomy against real-world ambiguous edge cases (e.g., driver asking customer to cancel due to payment method disputes).
+
+4. **LLM-Assisted Weak Supervision (`data_scripts/05_batch_classify_api_openai.py`)**:
+   - Scaled annotation across the corpus cost-effectively using the **OpenAI Batch API** (`gpt-4o-mini`) with strict JSON schema enforcement (`Pydantic / Structured Outputs`).
+   - Built chunking (500 reviews/chunk), automated status polling, and resume-on-failure mechanisms.
+   - Audited the LLM-generated pseudo-labels against human ground truth in evaluation notebooks (`notebooks/03_...`, `notebooks/04_...`) to guarantee label quality and alignment before training.
+
+5. **Stratified Multi-Label Split (`data_scripts/06_train_val_test_split.py`)**:
+   - Executed stratified multi-label sampling to prevent label leakage and preserve the class distribution across train, validation, and test sets stored in columnar Parquet format.
+
+---
+
 ## 📊 Benchmark Results
 
 Evaluated on the held-out test dataset using the best fine-tuned checkpoint:
