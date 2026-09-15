@@ -9,6 +9,13 @@ from omegaconf import DictConfig, OmegaConf
 class ExperimentTracker(Protocol):
     def log_metrics(self, metrics: Dict[str, float], step: Optional[int] = None) -> None: ...
     def get_experiment_name(self) -> str: ...
+    def log_artifact(
+        self,
+        artifact_path: Union[str, Path],
+        name: Optional[str] = None,
+        artifact_type: str = "model",
+        metadata: Optional[Dict[str, Any]] = None,
+    ) -> None: ...
 
 
 class WandbTracker:
@@ -115,6 +122,15 @@ class ConsoleTracker:
 
     def get_experiment_name(self) -> str:
         return self.experiment_name
+
+    def log_artifact(
+        self,
+        artifact_path: Union[str, Path],
+        name: Optional[str] = None,
+        artifact_type: str = "model",
+        metadata: Optional[Dict[str, Any]] = None,
+    ) -> None:
+        print(f"[{self.experiment_name}] Saved local artifact: {artifact_path}")
 
     def finish(self) -> None:
         pass

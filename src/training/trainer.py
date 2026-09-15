@@ -108,6 +108,26 @@ class Trainer:
 
             self.save_checkpoint(metrics)
 
+        # Upload best model checkpoint as artifact to tracker (e.g. WandB)
+        exp_name = (
+            self.tracker.get_experiment_name()
+            if hasattr(self.tracker, "get_experiment_name")
+            else "default"
+        )
+        best_model_path = self.checkpoint_dir / exp_name / "best_model.pt"
+        if hasattr(self.tracker, "log_artifact") and best_model_path.exists():
+            print(f"Uploading best model checkpoint as artifact: {best_model_path}")
+            self.tracker.log_artifact(
+                artifact_path=best_model_path,
+                name=f"{exp_name}-best-model",
+                artifact_type="model",
+                metadata={
+                    "best_performance": float(self.best_performance),
+                    "primary_metric": self.primary_metric,
+                    "epochs": epochs,
+                },
+            )
+
         if hasattr(self.tracker, "finish"):
             self.tracker.finish()
 
